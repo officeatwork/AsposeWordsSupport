@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>AsposeWordsSupport</id>
+        <version>$version$</version>
+        <title>AsposeWordsSupport</title>
+        <authors>Philipp Dolder</authors>
+        <owners>philippdolder</owners>
+        <licenseUrl>https://github.com/philippdolder/AsposeWordsSupport/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/philippdolder/AsposeWordsSupport</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A supportive package for Aspose.Words</description>
+        <copyright>Copyright 2014</copyright>
+        <tags>Aspose Words Word</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.5">
+                <dependency id="Aspose.Words" version="[14.3.0]" />
+            </group>
+        </dependencies>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System.Web" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.5" />
+        </frameworkAssemblies>
+    </metadata>
+    <files>
+        <file src="..\results\Release\AsposeWordsSupport.dll" target="lib\net45\AsposeWordsSupport.dll" />
+    </files>
+</package>

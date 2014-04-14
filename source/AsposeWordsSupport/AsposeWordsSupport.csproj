@@ -37,14 +37,9 @@
     <Reference Include="Aspose.Words">
       <HintPath>..\packages\Aspose.Words.14.3.0\lib\net3.5-client\Aspose.Words.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuiltInDocumentPropertyNames.cs" />

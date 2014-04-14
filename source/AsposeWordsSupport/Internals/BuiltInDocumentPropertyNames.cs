@@ -15,7 +15,7 @@
 //   limitations under the License.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-namespace AsposeWordsSupport
+namespace AsposeWordsSupport.Internals
 {
     public static class BuiltInDocumentPropertyNames
     {

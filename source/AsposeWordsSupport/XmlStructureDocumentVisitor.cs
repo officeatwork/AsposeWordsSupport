@@ -27,6 +27,7 @@ namespace AsposeWordsSupport
     using System.Xml.Linq;
     using Aspose.Words;
     using Aspose.Words.Fields;
+    using AsposeWordsSupport.Internals;
 
     public class XmlStructureDocumentVisitor : DocumentVisitor
     {

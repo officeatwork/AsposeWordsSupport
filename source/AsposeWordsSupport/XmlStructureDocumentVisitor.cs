@@ -213,7 +213,7 @@ namespace AsposeWordsSupport
             else
             {
                 this.structureBuilder
-                    .AppendFormat("<Run>{0}</Run>", run.Text)
+                    .AppendFormat("<Run>{0}</Run>", run.Text.Escape())
                     .AppendLine();
             }
 

@@ -57,9 +57,9 @@ namespace AsposeWordsSupport
             this.skipFieldSeparator = false;
         }
 
-        public string AsXml
+        public XElement AsXml
         {
-            get { return FormatXml(this.structureBuilder.ToString()); }
+            get { return ConvertToXml(this.structureBuilder.ToString()); }
         }
 
         public override VisitorAction VisitShapeStart(Aspose.Words.Drawing.Shape shape)
@@ -501,11 +501,11 @@ namespace AsposeWordsSupport
             return fieldInfos.Select(fieldInfo => fieldInfo.Name).ToList();
         }
 
-        private static string FormatXml(string xml)
+        private static XElement ConvertToXml(string xml)
         {
             try
             {
-                return XElement.Parse(xml).ToString(SaveOptions.None);
+                return XElement.Parse(xml);
             }
             catch (XmlException e)
             {

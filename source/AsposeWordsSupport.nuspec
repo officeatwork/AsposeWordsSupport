@@ -14,7 +14,7 @@
         <tags>Aspose Words Word</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.5">
-                <dependency id="Aspose.Words" version="[14.4.0]" />
+                <dependency id="Aspose.Words" version="[14.5.0]" />
             </group>
         </dependencies>
         <frameworkAssemblies>

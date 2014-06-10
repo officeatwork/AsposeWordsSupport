@@ -448,7 +448,7 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitStructuredDocumentTagStart(Aspose.Words.Markup.StructuredDocumentTag sdt)
         {
-            this.structureBuilder.AppendLine(string.Concat("<ContentControl Title=\"", sdt.Title, "\" >"));
+            this.structureBuilder.AppendLine(string.Concat("<ContentControl Type=\"", sdt.SdtType, "\" Title=\"", sdt.Title, "\" Tag=\"", sdt.Tag, "\" >"));
 
             return VisitorAction.Continue;
         }

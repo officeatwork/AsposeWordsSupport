@@ -19,6 +19,7 @@ namespace AsposeWordsSupport
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -65,7 +66,10 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitShapeStart(Aspose.Words.Drawing.Shape shape)
         {
-            this.structureBuilder.AppendFormat("<Shape width=\"{0}\" height=\"{1}\">", shape.Width, shape.Height);
+            this.structureBuilder.AppendFormat("<Shape {0} >",
+                FormatAttributes(
+                    new NamedValue("Width", shape.Width.ToString(CultureInfo.InvariantCulture)),
+                    new NamedValue("Height", shape.Height.ToString(CultureInfo.InvariantCulture))));
             this.structureBuilder.AppendLine();
 
             return VisitorAction.Continue;
@@ -137,7 +141,7 @@ namespace AsposeWordsSupport
         public override VisitorAction VisitSectionStart(Section section)
         {
             this.structureBuilder
-                .AppendFormat("<Section PaperSize='{0}'>", section.PageSetup.PaperSize)
+                .AppendFormat("<Section {0} >", FormatAttributes(new NamedValue("PaperSize", section.PageSetup.PaperSize.ToString())))
                 .AppendLine();
 
             return VisitorAction.Continue;
@@ -167,7 +171,7 @@ namespace AsposeWordsSupport
         public override VisitorAction VisitParagraphStart(Paragraph paragraph)
         {
             this.structureBuilder
-                .AppendFormat("<Paragraph StyleIdentifier='{0}' StyleName='{1}'>", paragraph.ParagraphFormat.StyleIdentifier, paragraph.ParagraphFormat.StyleName)
+                .AppendFormat("<Paragraph {0} >", FormatAttributes(new NamedValue("StyleIdentifier", paragraph.ParagraphFormat.StyleIdentifier.ToString())))
                 .AppendLine();
 
             return VisitorAction.Continue;
@@ -183,7 +187,7 @@ namespace AsposeWordsSupport
         public override VisitorAction VisitBookmarkStart(BookmarkStart bookmarkStart)
         {
             this.structureBuilder
-                .AppendFormat("<BookmarkStart Name='{0}' />", bookmarkStart.Name)
+                .AppendFormat("<BookmarkStart {0} />", FormatAttributes(new NamedValue("Name", bookmarkStart.Name)))
                 .AppendLine();
 
             return VisitorAction.Continue;
@@ -192,7 +196,7 @@ namespace AsposeWordsSupport
         public override VisitorAction VisitBookmarkEnd(BookmarkEnd bookmarkEnd)
         {
             this.structureBuilder
-                .AppendFormat("<BookmarkEnd Name='{0}' />", bookmarkEnd.Name)
+                .AppendFormat("<BookmarkEnd {0} />", FormatAttributes(new NamedValue("Name", bookmarkEnd.Name)))
                 .AppendLine();
 
             return VisitorAction.Continue;
@@ -212,8 +216,16 @@ namespace AsposeWordsSupport
             }
             else
             {
+                Font font = run.Font;
+                string formatedAttributes = FormatAttributes(
+                    new NamedValue("Font", font.Name),
+                    new NamedValue("StyleIdentifier", font.StyleIdentifier.ToString()),
+                    new NamedValue("Size", font.Size.ToString(CultureInfo.InvariantCulture)),
+                    new NamedValue("Language", font.LocaleId.ToString(CultureInfo.InvariantCulture))
+                    );
+
                 this.structureBuilder
-                    .AppendFormat("<Run>{0}</Run>", run.Text.Escape())
+                    .AppendFormat("<Run {0} >{1}</Run>", formatedAttributes, HttpUtility.HtmlEncode(run.Text.Escape()))
                     .AppendLine();
             }
 
@@ -289,14 +301,29 @@ namespace AsposeWordsSupport
             {
                 this.currentDocumentProperty = GetDocumentPropertyFromField(fieldStart);
                 this.currentFieldTagName = GetXmlTagForDocumentProperty(this.currentDocumentProperty);
-                this.structureBuilder.AppendLine(string.Concat("<", this.currentFieldTagName, "Start Name=\"", HttpUtility.HtmlEncode(this.currentDocumentProperty), "\" />"));
+
+                this.structureBuilder
+                    .AppendFormat(
+                        "<{0} {1} />", 
+                        this.currentFieldTagName + "Start", 
+                        FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentProperty))))
+                    .AppendLine();
+                
                 this.skipRun = true;
+
             }
             else if (fieldStart.FieldType == FieldType.FieldDocVariable)
             {
                 this.currentDocumentVariable = GetDocumentVariableFromField(fieldStart);
                 this.currentFieldTagName = "DocumentVariable";
-                this.structureBuilder.AppendLine(string.Concat("<", this.currentFieldTagName, "Start Name=\"", HttpUtility.HtmlEncode(this.currentDocumentVariable), "\" />"));
+
+                this.structureBuilder
+                    .AppendFormat(
+                        "<{0} {1} />",
+                        this.currentFieldTagName + "Start",
+                        FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentVariable))))
+                    .AppendLine();
+
                 this.skipRun = true;
             }
             else
@@ -311,12 +338,23 @@ namespace AsposeWordsSupport
         {
             if (!string.IsNullOrEmpty(this.currentDocumentProperty))
             {
-                this.structureBuilder.AppendLine(string.Concat("<", this.currentFieldTagName, "End Name=\"", HttpUtility.HtmlEncode(this.currentDocumentProperty), "\" />"));
+                 this.structureBuilder
+                    .AppendFormat(
+                        "<{0} {1} />",
+                        this.currentFieldTagName + "End",
+                        FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentProperty))))
+                    .AppendLine();
+
                 this.currentDocumentProperty = null;
             }
             else if (!string.IsNullOrEmpty(this.currentDocumentVariable))
             {
-                this.structureBuilder.AppendLine(string.Concat("<", this.currentFieldTagName, "End Name=\"", HttpUtility.HtmlEncode(this.currentDocumentVariable), "\" />"));
+                 this.structureBuilder
+                    .AppendFormat(
+                        "<{0} {1} />",
+                        this.currentFieldTagName + "End",
+                        FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentVariable))))
+                    .AppendLine();
                 this.currentDocumentVariable = null;
             }
             else
@@ -392,14 +430,14 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitHeaderFooterStart(HeaderFooter headerFooter)
         {
-            this.structureBuilder.AppendLine(string.Concat(
-                "<",
-                GetXmlTagForHeaderFooter(headerFooter),
-                " Type=\"",
-                HeaderFooterTypes[headerFooter.HeaderFooterType],
-                "\" LinkedToPrevious=\"",
-                headerFooter.IsLinkedToPrevious,
-                "\" >"));
+            this.structureBuilder
+               .AppendFormat(
+                   "<{0} {1} >",
+                   GetXmlTagForHeaderFooter(headerFooter),
+                   FormatAttributes(
+                       new NamedValue("Type", HeaderFooterTypes[headerFooter.HeaderFooterType]),
+                       new NamedValue("LinkedToPrevious", headerFooter.IsLinkedToPrevious.ToString(CultureInfo.InvariantCulture))))
+               .AppendLine();
 
             return VisitorAction.Continue;
         }
@@ -448,7 +486,14 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitStructuredDocumentTagStart(Aspose.Words.Markup.StructuredDocumentTag sdt)
         {
-            this.structureBuilder.AppendLine(string.Concat("<ContentControl Type=\"", sdt.SdtType, "\" Title=\"", sdt.Title, "\" Tag=\"", sdt.Tag, "\" >"));
+            this.structureBuilder
+               .AppendFormat(
+                   "<ContentControl {0} >",
+                   FormatAttributes(
+                       new NamedValue("Type", sdt.SdtType.ToString()),
+                       new NamedValue("Title", sdt.Title),
+                       new NamedValue("Tag", sdt.Tag)))
+               .AppendLine();
 
             return VisitorAction.Continue;
         }
@@ -502,6 +547,11 @@ namespace AsposeWordsSupport
             return fieldInfos.Select(fieldInfo => fieldInfo.Name).ToList();
         }
 
+        private static string FormatAttributes(params NamedValue[] attributeNameValuePairs)
+        {
+            return string.Join(" ", attributeNameValuePairs.Select(x => x.Name + "=" + x.Value.EncapsulateWithQuotes()));
+        }
+
         private static XElement ConvertToXml(string xml)
         {
             try
@@ -512,6 +562,19 @@ namespace AsposeWordsSupport
             {
                 throw new CouldNotFormatAsXmlException("Could not format the xml.", xml, e);
             }
+        }
+
+        private class NamedValue
+        {
+            public NamedValue(string name, string value)
+            {
+                this.Name = name;
+                this.Value = value;
+            }
+
+            public string Name { get; private set; }
+
+            public string Value { get; private set; }
         }
     }
 }

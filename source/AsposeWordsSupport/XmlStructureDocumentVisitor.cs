@@ -217,7 +217,7 @@ namespace AsposeWordsSupport
             else
             {
                 Font font = run.Font;
-                string formatedAttributes = FormatAttributes(
+                string formattedAttributes = FormatAttributes(
                     new NamedValue("Font", font.Name),
                     new NamedValue("StyleIdentifier", font.StyleIdentifier.ToString()),
                     new NamedValue("Size", font.Size.ToString(CultureInfo.InvariantCulture)),
@@ -225,7 +225,7 @@ namespace AsposeWordsSupport
                     );
 
                 this.structureBuilder
-                    .AppendFormat("<Run {0} >{1}</Run>", formatedAttributes, HttpUtility.HtmlEncode(run.Text.Escape()))
+                    .AppendFormat("<Run {0} >{1}</Run>", formattedAttributes, HttpUtility.HtmlEncode(run.Text.Escape()))
                     .AppendLine();
             }
 

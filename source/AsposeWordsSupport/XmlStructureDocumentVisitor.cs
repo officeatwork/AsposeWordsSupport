@@ -66,7 +66,8 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitShapeStart(Aspose.Words.Drawing.Shape shape)
         {
-            this.structureBuilder.AppendFormat("<Shape {0} >",
+            this.structureBuilder.AppendFormat(
+                "<Shape {0} >",
                 FormatAttributes(
                     new NamedValue("Width", shape.Width.ToString(CultureInfo.InvariantCulture)),
                     new NamedValue("Height", shape.Height.ToString(CultureInfo.InvariantCulture))));
@@ -221,8 +222,7 @@ namespace AsposeWordsSupport
                     new NamedValue("Font", font.Name),
                     new NamedValue("StyleIdentifier", font.StyleIdentifier.ToString()),
                     new NamedValue("Size", font.Size.ToString(CultureInfo.InvariantCulture)),
-                    new NamedValue("Language", font.LocaleId.ToString(CultureInfo.InvariantCulture))
-                    );
+                    new NamedValue("Language", font.LocaleId.ToString(CultureInfo.InvariantCulture)));
 
                 this.structureBuilder
                     .AppendFormat("<Run {0} >{1}</Run>", formattedAttributes, HttpUtility.HtmlEncode(run.Text.Escape()))
@@ -310,7 +310,6 @@ namespace AsposeWordsSupport
                     .AppendLine();
                 
                 this.skipRun = true;
-
             }
             else if (fieldStart.FieldType == FieldType.FieldDocVariable)
             {

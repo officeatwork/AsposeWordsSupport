@@ -172,7 +172,11 @@ namespace AsposeWordsSupport
         public override VisitorAction VisitParagraphStart(Paragraph paragraph)
         {
             this.structureBuilder
-                .AppendFormat("<Paragraph {0} >", FormatAttributes(new NamedValue("StyleIdentifier", paragraph.ParagraphFormat.StyleIdentifier.ToString())))
+                .AppendFormat(
+                    "<Paragraph {0} >", 
+                    FormatAttributes(
+                        new NamedValue("StyleIdentifier", paragraph.ParagraphFormat.StyleIdentifier.ToString()),
+                        new NamedValue("StyleName", paragraph.ParagraphFormat.StyleName)))
                 .AppendLine();
 
             return VisitorAction.Continue;

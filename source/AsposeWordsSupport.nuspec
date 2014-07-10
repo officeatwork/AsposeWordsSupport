@@ -24,5 +24,6 @@
     </metadata>
     <files>
         <file src="..\results\Release\AsposeWordsSupport.dll" target="lib\net45\AsposeWordsSupport.dll" />
+        <file src="..\results\Release\AsposeWordsSupport.pdb" target="lib\net45\AsposeWordsSupport.pdb" />
     </files>
 </package>

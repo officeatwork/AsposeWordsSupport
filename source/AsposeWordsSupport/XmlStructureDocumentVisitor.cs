@@ -520,7 +520,7 @@ namespace AsposeWordsSupport
 
         private static string GetDocumentPropertyFromField(FieldStart fieldStart)
         {
-            var nextSibling = fieldStart.NextSibling as Run;
+            var nextSibling = (Run)fieldStart.NextSibling;
             var runText = nextSibling.Text;
             int lengthOfDocumentPropertyPrefix = DocumentPropertyPrefix.Length;
 
@@ -529,7 +529,7 @@ namespace AsposeWordsSupport
 
         private static string GetDocumentVariableFromField(FieldStart fieldStart)
         {
-            var nextSibling = fieldStart.NextSibling as Run;
+            var nextSibling = (Run)fieldStart.NextSibling;
             var runText = nextSibling.Text;
             int lengthOfDocumentVariablePrefix = DocumentVariablePrefix.Length;
 

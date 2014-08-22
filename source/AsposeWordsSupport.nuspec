@@ -14,7 +14,7 @@
         <tags>Aspose Words Word</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.5">
-                <dependency id="Aspose.Words" version="[14.6.0]" />
+                <dependency id="Aspose.Words" version="[14.7.0]" />
             </group>
         </dependencies>
         <frameworkAssemblies>
@@ -24,6 +24,5 @@
     </metadata>
     <files>
         <file src="..\results\Release\AsposeWordsSupport.dll" target="lib\net45\AsposeWordsSupport.dll" />
-        <file src="..\results\Release\AsposeWordsSupport.pdb" target="lib\net45\AsposeWordsSupport.pdb" />
     </files>
 </package>

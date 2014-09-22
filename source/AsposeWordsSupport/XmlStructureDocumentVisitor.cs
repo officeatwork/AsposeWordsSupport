@@ -142,7 +142,11 @@ namespace AsposeWordsSupport
         public override VisitorAction VisitSectionStart(Section section)
         {
             this.structureBuilder
-                .AppendFormat("<Section {0} >", FormatAttributes(new NamedValue("PaperSize", section.PageSetup.PaperSize.ToString())))
+                .AppendFormat(
+                "<Section {0} >", 
+                FormatAttributes(
+                    new NamedValue("PaperSize", section.PageSetup.PaperSize.ToString()),
+                    new NamedValue("Orientation", section.PageSetup.Orientation.ToString())))
                 .AppendLine();
 
             return VisitorAction.Continue;

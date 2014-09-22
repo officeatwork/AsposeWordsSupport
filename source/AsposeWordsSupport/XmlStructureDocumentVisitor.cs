@@ -45,6 +45,7 @@ namespace AsposeWordsSupport
             { HeaderFooterType.FooterEven, "Even" },
         };
 
+        private readonly XmlStructureOptions options;
         private readonly StringBuilder structureBuilder;
         private bool skipRun;
         private bool skipFieldSeparator;
@@ -52,11 +53,17 @@ namespace AsposeWordsSupport
         private string currentDocumentProperty;
         private string currentDocumentVariable;
 
-        public XmlStructureDocumentVisitor()
+        public XmlStructureDocumentVisitor(XmlStructureOptions options)
         {
+            this.options = options;
+
             this.structureBuilder = new StringBuilder();
             this.skipRun = false;
             this.skipFieldSeparator = false;
+        }
+
+        public XmlStructureDocumentVisitor() : this(new XmlStructureOptions())
+        {
         }
 
         public XElement AsXml
@@ -141,13 +148,20 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitSectionStart(Section section)
         {
-            this.structureBuilder
-                .AppendFormat(
-                "<Section {0} >", 
-                FormatAttributes(
-                    new NamedValue("PaperSize", section.PageSetup.PaperSize.ToString()),
-                    new NamedValue("Orientation", section.PageSetup.Orientation.ToString())))
-                .AppendLine();
+            if (this.options.IncludeFormatting)
+            {
+                this.structureBuilder
+                    .AppendFormat(
+                    "<Section {0} >",
+                    FormatAttributes(
+                        new NamedValue("PaperSize", section.PageSetup.PaperSize.ToString()),
+                        new NamedValue("Orientation", section.PageSetup.Orientation.ToString())))
+                    .AppendLine();
+            }
+            else
+            {
+                this.structureBuilder.AppendLine("<Section>");
+            }
 
             return VisitorAction.Continue;
         }
@@ -175,13 +189,20 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitParagraphStart(Paragraph paragraph)
         {
-            this.structureBuilder
-                .AppendFormat(
-                    "<Paragraph {0} >", 
-                    FormatAttributes(
-                        new NamedValue("StyleIdentifier", paragraph.ParagraphFormat.StyleIdentifier.ToString()),
-                        new NamedValue("StyleName", paragraph.ParagraphFormat.StyleName)))
-                .AppendLine();
+            if (this.options.IncludeFormatting)
+            {
+                this.structureBuilder
+                    .AppendFormat(
+                        "<Paragraph {0} >",
+                        FormatAttributes(
+                            new NamedValue("StyleIdentifier", paragraph.ParagraphFormat.StyleIdentifier.ToString()),
+                            new NamedValue("StyleName", paragraph.ParagraphFormat.StyleName)))
+                    .AppendLine();
+            }
+            else
+            {
+                this.structureBuilder.AppendLine("<Paragraph>");
+            }
 
             return VisitorAction.Continue;
         }
@@ -225,16 +246,26 @@ namespace AsposeWordsSupport
             }
             else
             {
-                Font font = run.Font;
-                string formattedAttributes = FormatAttributes(
-                    new NamedValue("Font", font.Name),
-                    new NamedValue("StyleIdentifier", font.StyleIdentifier.ToString()),
-                    new NamedValue("Size", font.Size.ToString(CultureInfo.InvariantCulture)),
-                    new NamedValue("Language", font.LocaleId.ToString(CultureInfo.InvariantCulture)));
+                if (this.options.IncludeFormatting)
+                {
+                    Font font = run.Font;
 
-                this.structureBuilder
-                    .AppendFormat("<Run {0} >{1}</Run>", formattedAttributes, HttpUtility.HtmlEncode(run.Text.Escape()))
-                    .AppendLine();
+                    string formattedAttributes = FormatAttributes(
+                        new NamedValue("Font", font.Name),
+                        new NamedValue("StyleIdentifier", font.StyleIdentifier.ToString()),
+                        new NamedValue("Size", font.Size.ToString(CultureInfo.InvariantCulture)),
+                        new NamedValue("Language", font.LocaleId.ToString(CultureInfo.InvariantCulture)));
+
+                    this.structureBuilder
+                        .AppendFormat("<Run {0} >{1}</Run>", formattedAttributes, HttpUtility.HtmlEncode(run.Text.Escape()))
+                        .AppendLine();
+                }
+                else
+                {
+                    this.structureBuilder
+                        .AppendFormat("<Run>{0}</Run>", HttpUtility.HtmlEncode(run.Text.Escape()))
+                        .AppendLine();
+                }
             }
 
             return VisitorAction.Continue;

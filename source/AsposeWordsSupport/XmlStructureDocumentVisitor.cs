@@ -78,7 +78,11 @@ namespace AsposeWordsSupport
                 FormatAttributes(
                     new NamedValue("Width", shape.Width.ToString(CultureInfo.InvariantCulture)),
                     new NamedValue("Height", shape.Height.ToString(CultureInfo.InvariantCulture))));
-            this.structureBuilder.AppendLine();
+
+            if (this.options.IncludePictures && shape.HasImage)
+            {
+                this.structureBuilder.Append(Convert.ToBase64String(shape.ImageData.ImageBytes));
+            }
 
             return VisitorAction.Continue;
         }
@@ -329,7 +333,15 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitDrawingML(Aspose.Words.Drawing.DrawingML drawingMl)
         {
-            this.structureBuilder.AppendLine("<DrawingML />");
+            if (this.options.IncludePictures && drawingMl.HasImage)
+            {
+                this.structureBuilder.AppendFormat("<DrawingML>{0}</DrawingML>", Convert.ToBase64String(drawingMl.ImageData.ImageBytes))
+                    .AppendLine();
+            }
+            else
+            {
+                this.structureBuilder.AppendLine("<DrawingML />");
+            }
 
             return VisitorAction.Continue;
         }

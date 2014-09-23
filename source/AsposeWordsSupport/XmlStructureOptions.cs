@@ -22,8 +22,11 @@ namespace AsposeWordsSupport
         public XmlStructureOptions()
         {
             this.IncludeFormatting = true;
+            this.IncludePictures = false;
         }
 
         public bool IncludeFormatting { get; set; }
+
+        public bool IncludePictures { get; set; }
     }
 }

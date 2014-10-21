@@ -334,7 +334,16 @@ namespace AsposeWordsSupport
 
         public override VisitorAction VisitDrawingMLStart(DrawingML drawingMl)
         {
-            this.structureBuilder.AppendLine("<DrawingML>");
+            this.structureBuilder.AppendFormat(
+                "<DrawingML {0} >",
+                FormatAttributes(
+                    new NamedValue("Width", drawingMl.Width.ToString(CultureInfo.InvariantCulture)),
+                    new NamedValue("Height", drawingMl.Height.ToString(CultureInfo.InvariantCulture))));
+
+            if (this.options.IncludePictures && drawingMl.HasImage)
+            {
+                this.structureBuilder.Append(Convert.ToBase64String(drawingMl.ImageData.ImageBytes));
+            }
 
             return VisitorAction.Continue;
         }

@@ -27,6 +27,7 @@ namespace AsposeWordsSupport
     using System.Xml;
     using System.Xml.Linq;
     using Aspose.Words;
+    using Aspose.Words.Drawing;
     using Aspose.Words.Fields;
     using AsposeWordsSupport.Internals;
 
@@ -331,17 +332,16 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitDrawingML(Aspose.Words.Drawing.DrawingML drawingMl)
+        public override VisitorAction VisitDrawingMLStart(DrawingML drawingMl)
         {
-            if (this.options.IncludePictures && drawingMl.HasImage)
-            {
-                this.structureBuilder.AppendFormat("<DrawingML>{0}</DrawingML>", Convert.ToBase64String(drawingMl.ImageData.ImageBytes))
-                    .AppendLine();
-            }
-            else
-            {
-                this.structureBuilder.AppendLine("<DrawingML />");
-            }
+            this.structureBuilder.AppendLine("<DrawingML>");
+
+            return VisitorAction.Continue;
+        }
+
+        public override VisitorAction VisitDrawingMLEnd(DrawingML drawingMl)
+        {
+            this.structureBuilder.AppendLine("</DrawingML>");
 
             return VisitorAction.Continue;
         }

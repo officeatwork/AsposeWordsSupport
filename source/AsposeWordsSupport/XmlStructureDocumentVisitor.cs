@@ -332,29 +332,6 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitDrawingMLStart(DrawingML drawingMl)
-        {
-            this.structureBuilder.AppendFormat(
-                "<DrawingML {0} >",
-                FormatAttributes(
-                    new NamedValue("Width", drawingMl.Width.ToString(CultureInfo.InvariantCulture)),
-                    new NamedValue("Height", drawingMl.Height.ToString(CultureInfo.InvariantCulture))));
-
-            if (this.options.IncludePictures && drawingMl.HasImage)
-            {
-                this.structureBuilder.Append(Convert.ToBase64String(drawingMl.ImageData.ImageBytes));
-            }
-
-            return VisitorAction.Continue;
-        }
-
-        public override VisitorAction VisitDrawingMLEnd(DrawingML drawingMl)
-        {
-            this.structureBuilder.AppendLine("</DrawingML>");
-
-            return VisitorAction.Continue;
-        }
-
         public override VisitorAction VisitFieldStart(FieldStart fieldStart)
         {
             if (fieldStart.FieldType == FieldType.FieldDocProperty)

@@ -1,20 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="XmlStructureDocumentVisitor.cs" company="Philipp Dolder">
 //   Copyright (c) 2014
-//
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
-//
-//       http://www.apache.org/licenses/LICENSE-2.0
-//
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
+//   //   Licensed under the Apache License, Version 2.0 (the "License");
+//   //   you may not use this file except in compliance with the License.
+//   //   You may obtain a copy of the License at
+//   //       http://www.apache.org/licenses/LICENSE-2.0
+//   //   Unless required by applicable law or agreed to in writing, software
+//   //   distributed under the License is distributed on an "AS IS" BASIS,
+//   //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   //   See the License for the specific language governing permissions and
+//   //   limitations under the License.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
 namespace AsposeWordsSupport
 {
     using System;
@@ -26,9 +24,15 @@ namespace AsposeWordsSupport
     using System.Web;
     using System.Xml;
     using System.Xml.Linq;
+
     using Aspose.Words;
+    using Aspose.Words.BuildingBlocks;
     using Aspose.Words.Drawing;
     using Aspose.Words.Fields;
+    using Aspose.Words.Markup;
+    using Aspose.Words.Math;
+    using Aspose.Words.Tables;
+
     using AsposeWordsSupport.Internals;
 
     public class XmlStructureDocumentVisitor : DocumentVisitor
@@ -38,12 +42,12 @@ namespace AsposeWordsSupport
 
         private static readonly Dictionary<HeaderFooterType, string> HeaderFooterTypes = new Dictionary<HeaderFooterType, string>
         {
-            { HeaderFooterType.HeaderPrimary, "Primary" },
-            { HeaderFooterType.HeaderFirst, "First" },
-            { HeaderFooterType.HeaderEven, "Even" },
-            { HeaderFooterType.FooterPrimary, "Primary" },
-            { HeaderFooterType.FooterFirst, "First" },
-            { HeaderFooterType.FooterEven, "Even" },
+            { HeaderFooterType.HeaderPrimary, "Primary" }, 
+            { HeaderFooterType.HeaderFirst, "First" }, 
+            { HeaderFooterType.HeaderEven, "Even" }, 
+            { HeaderFooterType.FooterPrimary, "Primary" }, 
+            { HeaderFooterType.FooterFirst, "First" }, 
+            { HeaderFooterType.FooterEven, "Even" }, 
         };
 
         private readonly XmlStructureOptions options;
@@ -63,7 +67,8 @@ namespace AsposeWordsSupport
             this.skipFieldSeparator = false;
         }
 
-        public XmlStructureDocumentVisitor() : this(new XmlStructureOptions())
+        public XmlStructureDocumentVisitor()
+            : this(new XmlStructureOptions())
         {
         }
 
@@ -72,7 +77,7 @@ namespace AsposeWordsSupport
             get { return ConvertToXml(this.structureBuilder.ToString()); }
         }
 
-        public override VisitorAction VisitShapeStart(Aspose.Words.Drawing.Shape shape)
+        public override VisitorAction VisitShapeStart(Shape shape)
         {
             this.structureBuilder.AppendFormat(
                 "<Shape {0} >",
@@ -88,49 +93,49 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitShapeEnd(Aspose.Words.Drawing.Shape shape)
+        public override VisitorAction VisitShapeEnd(Shape shape)
         {
             this.structureBuilder.AppendLine("</Shape>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitTableStart(Aspose.Words.Tables.Table table)
+        public override VisitorAction VisitTableStart(Table table)
         {
             this.structureBuilder.AppendLine("<Table>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitTableEnd(Aspose.Words.Tables.Table table)
+        public override VisitorAction VisitTableEnd(Table table)
         {
             this.structureBuilder.AppendLine("</Table>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitCellStart(Aspose.Words.Tables.Cell cell)
+        public override VisitorAction VisitCellStart(Cell cell)
         {
             this.structureBuilder.AppendLine("<Cell>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitCellEnd(Aspose.Words.Tables.Cell cell)
+        public override VisitorAction VisitCellEnd(Cell cell)
         {
             this.structureBuilder.AppendLine("</Cell>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitRowStart(Aspose.Words.Tables.Row row)
+        public override VisitorAction VisitRowStart(Row row)
         {
             this.structureBuilder.AppendLine("<Row>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitRowEnd(Aspose.Words.Tables.Row row)
+        public override VisitorAction VisitRowEnd(Row row)
         {
             this.structureBuilder.AppendLine("</Row>");
 
@@ -276,14 +281,14 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitBuildingBlockStart(Aspose.Words.BuildingBlocks.BuildingBlock block)
+        public override VisitorAction VisitBuildingBlockStart(BuildingBlock block)
         {
             this.structureBuilder.AppendLine("<BuildingBlock>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitBuildingBlockEnd(Aspose.Words.BuildingBlocks.BuildingBlock block)
+        public override VisitorAction VisitBuildingBlockEnd(BuildingBlock block)
         {
             this.structureBuilder.AppendLine("</BuildingBlock>");
 
@@ -318,20 +323,6 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitCustomXmlMarkupStart(Aspose.Words.Markup.CustomXmlMarkup customXmlMarkup)
-        {
-            this.structureBuilder.AppendLine("<CustomXmlMarkup>");
-
-            return VisitorAction.Continue;
-        }
-
-        public override VisitorAction VisitCustomXmlMarkupEnd(Aspose.Words.Markup.CustomXmlMarkup customXmlMarkup)
-        {
-            this.structureBuilder.AppendLine("</CustomXmlMarkup>");
-
-            return VisitorAction.Continue;
-        }
-
         public override VisitorAction VisitFieldStart(FieldStart fieldStart)
         {
             if (fieldStart.FieldType == FieldType.FieldDocProperty)
@@ -341,11 +332,11 @@ namespace AsposeWordsSupport
 
                 this.structureBuilder
                     .AppendFormat(
-                        "<{0} {1} />", 
-                        this.currentFieldTagName + "Start", 
+                        "<{0} {1} />",
+                        this.currentFieldTagName + "Start",
                         FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentProperty))))
                     .AppendLine();
-                
+
                 this.skipRun = true;
             }
             else if (fieldStart.FieldType == FieldType.FieldDocVariable)
@@ -374,23 +365,23 @@ namespace AsposeWordsSupport
         {
             if (!string.IsNullOrEmpty(this.currentDocumentProperty))
             {
-                 this.structureBuilder
-                    .AppendFormat(
-                        "<{0} {1} />",
-                        this.currentFieldTagName + "End",
-                        FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentProperty))))
-                    .AppendLine();
+                this.structureBuilder
+                   .AppendFormat(
+                       "<{0} {1} />",
+                       this.currentFieldTagName + "End",
+                       FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentProperty))))
+                   .AppendLine();
 
                 this.currentDocumentProperty = null;
             }
             else if (!string.IsNullOrEmpty(this.currentDocumentVariable))
             {
-                 this.structureBuilder
-                    .AppendFormat(
-                        "<{0} {1} />",
-                        this.currentFieldTagName + "End",
-                        FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentVariable))))
-                    .AppendLine();
+                this.structureBuilder
+                   .AppendFormat(
+                       "<{0} {1} />",
+                       this.currentFieldTagName + "End",
+                       FormatAttributes(new NamedValue("Name", HttpUtility.HtmlEncode(this.currentDocumentVariable))))
+                   .AppendLine();
                 this.currentDocumentVariable = null;
             }
             else
@@ -436,28 +427,28 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitGlossaryDocumentStart(Aspose.Words.BuildingBlocks.GlossaryDocument glossary)
+        public override VisitorAction VisitGlossaryDocumentStart(GlossaryDocument glossary)
         {
             this.structureBuilder.AppendLine("<GlossaryDocument>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitGlossaryDocumentEnd(Aspose.Words.BuildingBlocks.GlossaryDocument glossary)
+        public override VisitorAction VisitGlossaryDocumentEnd(GlossaryDocument glossary)
         {
             this.structureBuilder.AppendLine("</GlossaryDocument>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitGroupShapeStart(Aspose.Words.Drawing.GroupShape groupShape)
+        public override VisitorAction VisitGroupShapeStart(GroupShape groupShape)
         {
             this.structureBuilder.AppendLine("<GroupShape>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitGroupShapeEnd(Aspose.Words.Drawing.GroupShape groupShape)
+        public override VisitorAction VisitGroupShapeEnd(GroupShape groupShape)
         {
             this.structureBuilder.AppendLine("</GroupShape>");
 
@@ -485,28 +476,28 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitOfficeMathStart(Aspose.Words.Math.OfficeMath officeMath)
+        public override VisitorAction VisitOfficeMathStart(OfficeMath officeMath)
         {
             this.structureBuilder.AppendLine("<OfficeMath>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitOfficeMathEnd(Aspose.Words.Math.OfficeMath officeMath)
+        public override VisitorAction VisitOfficeMathEnd(OfficeMath officeMath)
         {
             this.structureBuilder.AppendLine("</OfficeMath>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitSmartTagStart(Aspose.Words.Markup.SmartTag smartTag)
+        public override VisitorAction VisitSmartTagStart(SmartTag smartTag)
         {
             this.structureBuilder.AppendLine("<SmartTag>");
 
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitSmartTagEnd(Aspose.Words.Markup.SmartTag smartTag)
+        public override VisitorAction VisitSmartTagEnd(SmartTag smartTag)
         {
             this.structureBuilder.AppendLine("</SmartTag>");
 
@@ -520,7 +511,7 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitStructuredDocumentTagStart(Aspose.Words.Markup.StructuredDocumentTag sdt)
+        public override VisitorAction VisitStructuredDocumentTagStart(StructuredDocumentTag sdt)
         {
             this.structureBuilder
                .AppendFormat(
@@ -534,7 +525,7 @@ namespace AsposeWordsSupport
             return VisitorAction.Continue;
         }
 
-        public override VisitorAction VisitStructuredDocumentTagEnd(Aspose.Words.Markup.StructuredDocumentTag sdt)
+        public override VisitorAction VisitStructuredDocumentTagEnd(StructuredDocumentTag sdt)
         {
             this.structureBuilder.AppendLine("</ContentControl>");
 
